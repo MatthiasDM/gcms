@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package sdm.gcms.cc.controller;
+package sdm.gcms.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -40,7 +40,7 @@ public class LoginController {
         return modelAndView;
     }
 
-    public String showSecurePage(HttpSession session, HttpServletRequest request) {
+    public String showSecurePage(HttpSession session) {
         if (session.getAttribute("authenticated") == null) {
             return "redirect:/login";
         } else {
@@ -49,12 +49,12 @@ public class LoginController {
     }
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
-    public String processLogin(@RequestParam String username, @RequestParam String password, HttpSession session, HttpServletRequest request) {
+    public ModelAndView processLogin(@RequestParam String username, @RequestParam String password, HttpSession session, HttpServletRequest request) {
         if (username.equals("admin") && password.equals("secret")) {
             session.setAttribute("authenticated", true);
-            return "redirect: " + request.getHeader("Referer");
+            return new ModelAndView("redirect:" + request.getHeader("Referer"));
         } else {
-            return "login";
+            return new ModelAndView("redirect:/login");
         }
     }
 }

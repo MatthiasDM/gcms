@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package sdm.gcms.cc.services;
+package sdm.gcms.services;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import java.nio.file.Path;
@@ -21,8 +21,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
-import sdm.gcms.cc.Config;
-import sdm.gcms.cc.interfaces.PF4JInterface;
+import sdm.gcms.Config;
+import sdm.gcms.interfaces.PF4JInterface;
 import sdm.gcms.shared.database.Core;
 
 /**

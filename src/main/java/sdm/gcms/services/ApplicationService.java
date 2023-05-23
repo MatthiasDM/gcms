@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package sdm.gcms.cc.services;
+package sdm.gcms.services;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.mongodb.BasicDBObject;
@@ -18,8 +18,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
-import sdm.gcms.cc.collections.Page;
-import sdm.gcms.cc.collections.PageAccess;
+import sdm.gcms.collections.Page;
+import sdm.gcms.collections.PageAccess;
 import sdm.gcms.shared.database.Core;
 import sdm.gcms.shared.database.Database;
 import static sdm.gcms.shared.database.Database.getSpecificObject;
@@ -45,9 +45,13 @@ public class ApplicationService {
 
     public static StringBuilder getPage(String title) throws JsonProcessingException, ClassNotFoundException {
         StringBuilder sb = new StringBuilder();
-        PageAccess pageAccess = getSpecificObject(Database.getMongoConfiguration("pages"), "title", title, PageAccess.class, Arrays.asList("access"));
-//Document page = getObject(Database.getMongoConfiguration("pages"), "title", title);        
-        return sb.append(Core.universalObjectMapper.writeValueAsString(pageAccess));
+        Page page = getSpecificObject(Database.getMongoConfiguration("pages"), "title", title, Page.class, Arrays.asList("access"));
+        PageAccess pageAccess = page.getAccess();
+        if(pageAccess.getType().equals("public")){
+            return sb.append(Core.universalObjectMapper.writeValueAsString(page));
+        }else{
+            return sb;
+        }        
     }
 
 //    public static GetResponse dataload(String cookie, MongoConfigurations _mongoConf, Map<String, String> requestParameters, BasicDBObject prefilter) throws JsonProcessingException, ClassNotFoundException, NoSuchFieldException, IOException {

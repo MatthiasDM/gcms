@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package sdm.gcms.cc.config;
+package sdm.gcms.config;
 
 /**
  *
@@ -26,8 +26,8 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.filter.OncePerRequestFilter;
-import sdm.gcms.cc.filters.ApiKeyAuthFilter;
-import sdm.gcms.cc.filters.SessionAuthFilter;
+import sdm.gcms.filters.ApiKeyAuthFilter;
+import sdm.gcms.filters.SessionAuthFilter;
 import sdm.gcms.shared.database.Core;
 
 @Configuration

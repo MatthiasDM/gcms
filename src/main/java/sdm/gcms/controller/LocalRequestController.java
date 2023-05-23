@@ -1,17 +1,15 @@
-package sdm.gcms.cc.controller;
+package sdm.gcms.controller;
 
 ///*
 // * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
 // * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
 // */
 import com.fasterxml.jackson.core.JsonProcessingException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
+import java.io.IOException;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import java.util.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.util.stream.*;
 import org.springdoc.core.models.GroupedOpenApi;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -21,49 +19,39 @@ import org.springframework.http.ResponseEntity;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import sdm.gcms.cc.services.SpringPluginService;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
+import sdm.gcms.services.ApplicationService;
 
 @RestController
-@RequestMapping(value = "/api", produces = MediaType.APPLICATION_JSON_VALUE)
-public class PluginRequestController {
+//@RequestMapping(produces = MediaType.)
+public class LocalRequestController {
 
-    
     @Autowired
-    SpringPluginService pluginService;
+    ApplicationService applicationService;
 
-        @Bean
-    public GroupedOpenApi PluginOpenApi() {
-        String paths[] = {"/api/**"};
-        return GroupedOpenApi.builder().group("plugins").pathsToMatch(paths)
-                //.pathsToExclude("/api/**")
-                //.pathsToExclude("/api/v2/**", "/v2/**", "/**/v3/**", "/api/**")
+    @Autowired
+    private HttpSession httpSession;
+
+    @Bean
+    public GroupedOpenApi localOpenApi() {
+        String paths[] = {"/**"};
+        return GroupedOpenApi.builder().group("gcms").pathsToMatch(paths)
+                .pathsToExclude("/api/**")
                 .build();
     }
-    
-    @GetMapping(value = "/info")
-    public ResponseEntity<Object> pluginsInfo() throws JsonProcessingException {
-        return new ResponseEntity<>(pluginService.pluginsInfo(), HttpStatus.OK);
-    }
 
-    @GetMapping(value = "/s/info")
-    public ResponseEntity<Object> securedPluginsInfo(@RequestHeader("X-API-Key") String apikey) throws JsonProcessingException {
-        return new ResponseEntity<>(pluginService.pluginsInfo(), HttpStatus.OK);
+    @GetMapping("/page/{title}")
+    public ModelAndView getPage(@PathVariable("title") String title, HttpSession session) throws JsonProcessingException, ClassNotFoundException {
+        ModelAndView mav = new ModelAndView();
+        mav.setViewName("static/page/index.html");
+        mav.addObject("contents", applicationService.getPage(title));
+        return mav;
     }
-
-    @PutMapping(value = "/reload/{id}")
-    public ResponseEntity<Object> reloadPlugins(@PathVariable("id") String id) {
-        return new ResponseEntity<>(pluginService.reloadPlugin(id), HttpStatus.OK);
-    }
-
-    @RequestMapping(value = "/plugin/{id}", method = RequestMethod.GET)
-    public ResponseEntity<Object> getPlugin(@PathVariable("id") String id) {
-        return new ResponseEntity<>(pluginService.getPlugin(id), HttpStatus.OK);
-    }
- 
 
 }
 

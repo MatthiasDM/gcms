@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package sdm.gcms.cc.collections;
+package sdm.gcms.collections;
 
 import sdm.gcms.shared.database.filters.annotation.gcmsObject;
 
@@ -60,8 +60,7 @@ public class Page {
             editRole = "ADMIN",         
             type = "object"
     )
-    public PageAccess access;
-    
+    public PageAccess access;    
     
     @gcmsObject(
             type = "date",
@@ -97,6 +96,16 @@ public class Page {
     public Page() {
     }
 
+    public PageAccess getAccess() {
+        return access;
+    }
+
+    public void setAccess(PageAccess access) {
+        this.access = access;
+    }
+
+    
+    
     public Page(String editablepageid, String title, String contents, String template, String approver, String category, String accessType, long approved_on, long created_on, String created_by, long edited_on) {
         this.editablepageid = editablepageid;
         this.title = title;
