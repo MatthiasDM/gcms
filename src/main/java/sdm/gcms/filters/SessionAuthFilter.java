@@ -10,7 +10,9 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
+import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
+
 import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -18,10 +20,8 @@ import org.springframework.web.servlet.ModelAndView;
  *
  * @author Matthias
  */
-@Order(1)
-public class SessionAuthFilter extends OncePerRequestFilter {
 
-    private static final String SESSIONKEY = "userSession";
+public class SessionAuthFilter extends OncePerRequestFilter {
 
     public SessionAuthFilter(final String headerName) {
     }
@@ -32,17 +32,8 @@ public class SessionAuthFilter extends OncePerRequestFilter {
         if (httpSession == null) {
             response.sendRedirect(request.getContextPath() + "/login");
             return;
-        } else {           
-//            if (request.getPathInfo().startsWith("/page/")) {
-//                ModelAndView mav = new ModelAndView("static/page/index.html");
-//                mav.addObject("message", "Hello from the filter!");
-//                httpSession.setAttribute("myModelAndView", mav);
-//                return;
-//            };
-        };
-        filterChain.doFilter(request, response);
-
+        } else {        
+           filterChain.doFilter(request, response);
+        }
     }
-
-    //
 }

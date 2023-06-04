@@ -13,22 +13,17 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springdoc.core.models.GroupedOpenApi;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+
 import org.springframework.web.servlet.ModelAndView;
 import sdm.gcms.services.ApplicationService;
 
-@RestController
-//@RequestMapping(produces = MediaType.)
+@Controller
 public class LocalRequestController {
 
     @Autowired
@@ -45,12 +40,33 @@ public class LocalRequestController {
                 .build();
     }
 
-    @GetMapping("/page/{title}")
-    public ModelAndView getPage(@PathVariable("title") String title, HttpSession session) throws JsonProcessingException, ClassNotFoundException {
-        ModelAndView mav = new ModelAndView();
-        mav.setViewName("static/page/index.html");
-        mav.addObject("contents", applicationService.getPage(title));
-        return mav;
+    @RequestMapping(value = "/page/{id}", method = RequestMethod.GET)
+    public ModelAndView getPage(@PathVariable("id") String id) throws JsonProcessingException, ClassNotFoundException {
+        Object pageContents = applicationService.getPage(id); // Haal de gegevens op zonder naar de response te schrijven
+        ModelAndView modelAndView = new ModelAndView("static/page/index.html", "contents", pageContents);
+        return modelAndView;
+    }
+
+    @GetMapping("/login")
+    public ModelAndView showLoginForm(HttpServletResponse response) throws IOException {
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("static/login/index.html");
+        //modelAndView.setViewName("static/page/index.html");
+        return modelAndView;
+    }
+
+    @RequestMapping(value = "/login", method = RequestMethod.POST)
+    public ModelAndView processLogin(@RequestParam String username, @RequestParam String password, HttpSession session, HttpServletRequest request) {
+        if (username.equals("admin") && password.equals("secret")) {
+            String referer = request.getHeader("Referer");
+            ModelAndView modelAndView = new ModelAndView();
+            modelAndView.setViewName("redirect:/" + referer);
+            session.setAttribute("authenticated", true);
+            session.setAttribute("model", modelAndView);
+            return modelAndView;
+        } else {
+            return new ModelAndView("redirect:/login");
+        }
     }
 
 }
